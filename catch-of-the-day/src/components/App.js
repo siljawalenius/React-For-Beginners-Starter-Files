@@ -3,6 +3,7 @@ import Header from './Header.js';
 import Order from './Order.js';
 import Inventory from './Inventory.js';
 import sampleFishes from '../sample-fishes.js'
+import Fish from './Fish'
 
 
 class App extends React.Component{
@@ -28,17 +29,36 @@ class App extends React.Component{
     }
 
     loadSampleFishes = () => {
-        alert("load sample fishes")
+        //alert("load sample fishes")
         this.setState({
             fishes: sampleFishes
         })
+    }
+
+    addToOrder =(key) =>{
+        //1. copy state
+        const order = {...this.state.order}
+        //2. add to order or update number in order
+        order[key] = order[key] + 1 || 1;
+        //3. call setState to update our state object
+        this.setState({order})
     }
 
     render(){
         return (
             <div className = "catch-of-the-day">
                 <div className = "menu">
-        <Header tagline = "fresh seafood market"></Header>
+                    <Header tagline = "fresh seafood market"></Header>
+                    <ul className = "fishes">
+                        {
+                            Object.keys(this.state.fishes).map(key => <Fish 
+                                key = {key} 
+                                details = {this.state.fishes[key]} 
+                                addToOrder = {this.addToOrder}
+                                index = {key}
+                            />)
+                        }
+                    </ul>
                 </div>
                 <Order/>
                 <Inventory 
