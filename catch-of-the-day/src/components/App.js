@@ -4,6 +4,7 @@ import Order from './Order.js';
 import Inventory from './Inventory.js';
 import sampleFishes from '../sample-fishes.js'
 import Fish from './Fish'
+import base from '../base'
 
 
 class App extends React.Component{
@@ -11,6 +12,19 @@ class App extends React.Component{
         fishes: {},
         order: {}
     };
+
+    componentDidMount(){
+        const { params }= this.props.match
+        this.ref = base.syncState(`${params.storeId}/fishes`, {
+            context: this,
+            state: 'fishes'
+        })
+    }
+
+    componentWillUnmount(){
+        base.removeBinding(this.ref)
+        //clean up any old instances to avoid memory leak
+    }
 
     addFish =(fish) =>{
         console.log("adding a fishs")
@@ -26,6 +40,16 @@ class App extends React.Component{
             //if prop and value are the same, this will always work :) 
             fishes
         })
+    }
+
+    updateFish = (key, updatedFish) => {
+        //save current
+        const fishes = {...this.state.fishes}
+        //update correct object
+        fishes[key] = updatedFish;
+        //update state
+        this.setState({ fishes })
+
     }
 
     loadSampleFishes = () => {
@@ -60,10 +84,12 @@ class App extends React.Component{
                         }
                     </ul>
                 </div>
-                <Order/>
+                <Order fishes = { this.state.fishes} order = {this.state.order}/>
                 <Inventory 
                     addFish={this.addFish}
+                    updateFish= {this.updateFish}
                     loadSampleFishes = {this.loadSampleFishes}
+                    fishes= {this.state.fishes}
                 />
                 
             </div>
