@@ -1,4 +1,6 @@
 import React from "react";
+//validating prop types. This is similar to TS
+import PropTypes from "prop-types";
 
 //stateless react component here 
 
@@ -18,6 +20,9 @@ const Header = (props) => (
   </header>
 );
 
+Header.propTypes = {
+  tagline: PropTypes.string.isRequired
+}
 // class Header extends React.Component{
 //     render(){
 //         return(
